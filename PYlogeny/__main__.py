@@ -25,11 +25,12 @@ logging.basicConfig(format="[%(asctime)s] %(levelname)-8s->  %(message)s",
                     level=logging.NOTSET, datefmt='%m/%d/%Y %I:%M:%S %p')
 logger = logging.getLogger(__name__)
 
-# the decorator to apply on the logger methods info, warn, ...
+
 def add_color(logger_method, color):
     def wrapper(message, *args, **kwargs):
-      return logger_method(color+message+NO_COLOR, *args, **kwargs)
+        return logger_method(color+message+NO_COLOR, *args, **kwargs)
     return wrapper
+
 
 for level, color in zip(("info", "warning", "error", "debug"), (GREEN, ORANGE, RED, BLUE)):
     setattr(logger, level, add_color(getattr(logger, level), color))
@@ -38,12 +39,12 @@ for level, color in zip(("info", "warning", "error", "debug"), (GREEN, ORANGE, R
 def get_args():
     """Parse command line arguments"""
     desc="Create a taxonomic breakdown for a list of accession numbers."
-    epi=("Given an input list of accession numbers, create a table describing the\n"
-         "taxonomic memberships of those accession numbers.\n")
+    epi=("Given an input list of accession numbers, create a table describing the \n"
+         "taxonomic memberships of those accession numbers. \n")
 
     try:
         parser = argparse.ArgumentParser(description=desc, epilog=epi, prog="PYlogeny.py")
-        parser.add_argument("-i","--infile", action="store",
+        parser.add_argument("-i", "--infile", action="store",
                             help="A one-per-line file of accession numbers.")
         parser.add_argument("-o", "--outfile", action="store",
                             help="Output tabular file (default STDOUT).")
@@ -104,8 +105,7 @@ def main():
             logger.info(f"Working on Accession {i}: {acc.strip()}")
             record = Query(acc)
             lineage = Lineage(record.taxid, ncbi).lineage_string
-            ofh.write(acc.strip() + ',' + record.taxid + ',' +  lineage + '\n')
-
+            ofh.write(acc.strip() + ',' + record.taxid + ',' + lineage + '\n')
 
     ofh.close()
 

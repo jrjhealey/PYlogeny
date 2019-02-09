@@ -1,4 +1,3 @@
-from .__main__ import logger
 
 class Lineage(object):
     """A class to hold the methods and info associated with returning lineages from TaxIDs.
@@ -21,7 +20,6 @@ class Lineage(object):
         try:
             lineage = self.ncbi.get_lineage(self.taxid)
         except ValueError:
-            logger.error('No match for TaxID found. Consider updating the database with -u|--update ?')
             return ['Not_found']
         names = self.ncbi.get_taxid_translator(lineage)
         ordered = [names[tid] for tid in lineage]
