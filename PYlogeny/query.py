@@ -1,14 +1,14 @@
 from Bio import Entrez
 
-
 class Query(object):
     """Given an accession, return the database which should be queried in accordance and run the query.
 
     :accession - the input query accession number
-    :database - an internal variabl
+    :database - an internal variable which holds either a specified database or guesses from the accession
+    :taxid - The thing we came here for; the converted TaxID which corresponds to the Accession
     """
 
-    def __init__(self, accession, database):
+    def __init__(self, accession, database=None):
         self.accession = accession
         self.database = self.guess_database() if not database else database
         self.taxid = self.query()
