@@ -39,30 +39,35 @@ for level, color in zip(("info", "warning", "error", "debug"), (GREEN, ORANGE, R
 def get_args():
     """Parse command line arguments"""
     desc="Create a taxonomic breakdown for a list of accession numbers."
-    epi=("Given an input list of accession numbers, create a table describing the \n"
-         "taxonomic memberships of those accession numbers. \n")
+    epi=("Given an input list of accession numbers, create a table describing the taxonomic \n"
+         "memberships of those accession numbers.\n\n"
+         #"At present, taxonomies can be returned at a rate of ~ 2/sec. For higher polling, \n"
+         #"you will need to create an API key through NCBI (W.I.P).\n\n"
+         "The first time you run this program, and any time -u|--update is used, the \n"
+         "taxon dump will be made and an SQL database created. This takes several minutes.")
 
     try:
-        parser = argparse.ArgumentParser(description=desc, epilog=epi, prog="PYlogeny.py")
+        parser = argparse.ArgumentParser(description=desc, epilog=epi, prog="PYlogeny.py",
+                                         formatter_class=argparse.RawTextHelpFormatter)
         parser.add_argument("-i", "--infile", action="store",
                             help="A one-per-line file of accession numbers.")
         parser.add_argument("-o", "--outfile", action="store",
                             help="Output tabular file (default STDOUT).")
         parser.add_argument("-d", "--database", action="store",
-                            help="What database to search for the accessions in (if you know it), "
+                            help="What database to search for the accessions in (if you know it), \n"
                                  "the script will attempt to use their format to guess otherwise.")
         parser.add_argument("-e", "--email", action="store", required=True,
                             help="Email to use with Eutils/Entrez.")
         parser.add_argument("--version", action="version",
                             version="%(prog)s v{version}".format(version=__version__))
         parser.add_argument("-v", "--verbose", action="count", default=0,
-                            help="Increase verbosity/logging.")
-        parser.add_argument("-s", "--sql", action="store", default='~/.etetoolkit',
-                            help="Location to store the ETE3 database. Default is in ~/.etetoolkit ."
-                                 "If you specify a different location to the last instance, a new copy"
-                                 "of the database will have to be downloaded regardless.")
+                            help="Increase verbosity/logging. (-v or -vv)")
+        parser.add_argument("-s", "--sql", action="store", default='~/.etetoolkit/',
+                            help="Location to store the ETE3 database. Default is in ~/.etetoolkit/ .\n"
+                                 "If you specify a different location to the last instance, a \n"
+                                 "new copy of the database will have to be downloaded regardless.")
         parser.add_argument("-u", "--update", action='store_true',
-                            help="Update the local copy of the TaxID database. (False by default, but"
+                            help="Update the local copy of the TaxID database. \n(False by default, but "
                                  "should be done on a frequent basis).")
 
         if len(sys.argv) == 1:
