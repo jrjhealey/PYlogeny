@@ -1,4 +1,15 @@
 from Bio import Entrez
+import logging
+logger = logging.getLogger('__main__')
+NO_COLOR = "\33[m"
+RED, GREEN, ORANGE, BLUE, PURPLE, LBLUE, GREY = map("\33[%dm".__mod__, range(31, 38))
+def add_color(logger_method, color):
+    def wrapper(message, *args, **kwargs):
+        return logger_method(color+message+NO_COLOR, *args, **kwargs)
+    return wrapper
+
+for level, color in zip(("info", "warning", "error", "debug"), (GREEN, ORANGE, RED, BLUE)):
+    setattr(logger, level, add_color(getattr(logger, level), color))
 
 class Query(object):
     """Given an accession, return the database which should be queried in accordance and run the query.
@@ -31,7 +42,7 @@ class Query(object):
         # RefSeq identifiers have a _ at the third position. Non RefSeq ID's are horror show
         # so I'm ignoring them for the time being.
         if not self._is_refseq():
-            sys.stderr.write("RefSeq accessions only at present")
+            logging.error(f"RefSeq accessions only at present. Skipping.")
             return
 
         return database_mappings_refseq[self.accession[0:3]]
