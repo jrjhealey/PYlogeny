@@ -26,7 +26,7 @@ class Query(object):
 
 
     def __repr__(self):
-        return str(self.__class__.__name__ + "<" + self.accession + ">")
+        return str(self.__class__.__name__ + "<" + self.accession + ":" + self.taxid + ">")
 
     def _is_refseq(self):
         return True if self.accession[2] == "_" else False
